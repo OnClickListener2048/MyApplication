@@ -4,27 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".MainActivity">
 
-    <com.example.administrator.myapplication.view.CircleProgressView
-        android:id="@+id/progress1"
-        android:layout_width="@dimen/px_to_dip_230"
-        android:layout_height="@dimen/px_to_dip_230"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/px_to_dip_230"
-        app:backCircleColor="@color/RGB_E6E9ED"
-        app:backCircleWidth="@dimen/px_to_dip_8"
-        app:endCircleColor="@color/RGB_FF8209"
-        app:endCircleWidth="@dimen/px_to_dip_24"
-        app:numTextColor="@color/RGB_FF8209"
-        app:numTextSize="@dimen/px_to_dip_48"
-        app:outerCircleColor="@color/RGB_FF8209"
-        app:outerCircleWidth="@dimen/px_to_dip_14"
-        app:progress_num="1026"
-        app:progress_title="饮食摄入"
-        app:progress_unit="kcal"
-        app:titleTextColor="@color/RGB_656D78"
-        app:titleTextSize="@dimen/px_to_dip_24"
-        app:unitTextColor="@color/RGB_FF8209"
-        app:unitTextSize="@dimen/px_to_dip_24" />
+    <com.example.administrator.myapplication.view.VirtualItemLayout
+        android:background="#ffb200"
+        android:layout_width="match_parent"
+        app:topImage="@mipmap/shopbag"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

@@ -22,4 +22,8 @@
         <attr name="endCircleWidth" format="dimension" />
         <attr name="endCircleColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="VirtualItemLayout">
+        <attr name="topImage" format="integer" />
+    </declare-styleable>
 </resources>
