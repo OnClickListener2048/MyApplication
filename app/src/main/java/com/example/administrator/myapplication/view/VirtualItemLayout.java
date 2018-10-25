@@ -2,18 +2,20 @@ package com.example.administrator.myapplication.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.blankj.utilcode.util.ImageUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.administrator.myapplication.R;
@@ -29,6 +31,14 @@ public class VirtualItemLayout extends LinearLayout {
     private Drawable topImage;
     private int mRadius;
     private Paint mRectPaint;
+    private RectF mOval;
+    private int rectLeft = SizeUtils.dp2px(35);
+    private int rectTop = SizeUtils.dp2px(45);
+    private int rectRight = SizeUtils.dp2px(35);
+    private int rectBottom = SizeUtils.dp2px(45);
+    private Paint mBitmapPaint;
+    private int mTempHeight;
+    private RectF mRectF;
 
     public VirtualItemLayout(Context context) {
         super(context);
@@ -47,10 +57,15 @@ public class VirtualItemLayout extends LinearLayout {
 
     private void init(Context context, AttributeSet attributeSet) {
         mArchPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mArchPaint.setColor(Color.BLACK);
+        mArchPaint.setColor(Color.WHITE);
 
         mRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRectPaint.setColor(Color.WHITE);
+        mRectPaint.setStyle(Paint.Style.STROKE);
+        mRectPaint.setStrokeWidth(SizeUtils.dp2px(1));
+
+        mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
 
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.VirtualItemLayout);
         topImage = typedArray.getDrawable(typedArray.getIndex(R.styleable.VirtualItemLayout_topImage));
@@ -58,28 +73,26 @@ public class VirtualItemLayout extends LinearLayout {
         if (topImage != null) {
             int intrinsicHeight = topImage.getIntrinsicHeight();
             int intrinsicWidth = topImage.getIntrinsicWidth();
-            Log.d(TAG, "init: intrinsicHeight" + intrinsicHeight);
-            Log.d(TAG, "init: intrinsicWidth" + intrinsicWidth);
+            LogUtils.d("init: intrinsicHeight" + intrinsicHeight);
+            LogUtils.d("init: intrinsicWidth" + intrinsicWidth);
             mRadius = intrinsicHeight > intrinsicWidth ? intrinsicHeight : intrinsicWidth;
-            mRadius = mRadius + 20;
+            mRadius = mRadius + SizeUtils.dp2px(5);
 
         }
 
         typedArray.recycle();
 
-        RectF oval = new RectF();
-    }
+        mOval = new RectF();
+        mOval.left = ScreenUtils.getScreenWidth() / 2 - mRadius;
+        mOval.right = ScreenUtils.getScreenWidth() / 2 + mRadius;
+        mOval.top = rectTop - mRadius;
+        mOval.bottom = rectTop + mRadius;
 
-    @Override
-    public LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new LayoutParams(getContext(),attrs);
+        mRectF = new RectF();
+        mRectF.left = rectLeft;
+        mRectF.top = rectTop;
+        mRectF.right = ScreenUtils.getScreenWidth() - rectRight;
     }
-
-    @Override
-    protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        return new LayoutParams(lp);
-    }
-
 
 
     @Override
@@ -87,35 +100,89 @@ public class VirtualItemLayout extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
         this.width = w;
         this.height = h;
-        Log.d(TAG, "onSizeChanged: " + w);
-        Log.d(TAG, "onSizeChanged: " + h);
+        LogUtils.d(w);
+        LogUtils.d(h);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(TAG, "onDraw: ");
-        Log.d(TAG, "onDraw: getX()" + getX());
-        Log.d(TAG, "onDraw: getTop()" + getTop());
 
 
+        canvas.drawArc(mOval, 0, -180, false, mArchPaint);
 
-//        canvas.drawArc();
+//        canvas.drawRect(rectLeft,rectTop, ScreenUtils.getScreenWidth()-rectRight,height-rectBottom,mRectPaint);
 
-        canvas.drawRect(104,120, ScreenUtils.getScreenWidth()-106,height-120,mRectPaint);
+//        canvas.drawRoundRect(rectLeft,rectTop, ScreenUtils.getScreenWidth()-rectRight,height-rectBottom,3,3,mRectPaint);
+        mRectF.bottom = height - rectBottom;
+        canvas.drawRoundRect(mRectF, SizeUtils.dp2px(1), SizeUtils.dp2px(1), mRectPaint);
 
+        canvas.drawBitmap(ImageUtils.drawable2Bitmap(topImage), ScreenUtils.getScreenWidth() / 2 - topImage.getIntrinsicWidth() / 2
+                , rectTop - mRadius + SizeUtils.dp2px(5), mBitmapPaint);
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int size = MeasureSpec.getSize(heightMeasureSpec);
-//        int height  = size + mRadius / 2 - getTop() / 2;
-//        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec),height+300);
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        LogUtils.d(MeasureSpec.getMode(widthMeasureSpec));
+        LogUtils.d(MeasureSpec.getSize(widthMeasureSpec));
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = getChildAt(i);
+            measureChild(view, widthMeasureSpec, heightMeasureSpec);
+        }
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+    }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
+//        super.onLayout(changed, l, t, r, b);
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = getChildAt(i);
+            int childWidth = view.getMeasuredWidth();//主要getMeasuredWidth函数的值必须调用了measureChild才存在值
+            int childHeight = view.getMeasuredHeight();
+            if (view instanceof RelativeLayout) {
+                view.layout(rectLeft
+                        , rectTop
+                        , ScreenUtils.getScreenWidth() - rectRight
+                        , rectTop + childHeight);
+                mTempHeight = rectTop + childHeight;
+            }
+
+            if (view instanceof RecyclerView) {
+                view.layout(rectLeft
+                        , mTempHeight
+                        , ScreenUtils.getScreenWidth() - rectRight
+                        , height - rectBottom);
+            }
+        }
+
+    }
+
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MyLayoutParams(getContext(), attrs);
+    }
+
+
+    @Override
+    protected LayoutParams generateDefaultLayoutParams() {
+        return new MyLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    }
+
+    public static class MyLayoutParams extends LinearLayout.LayoutParams {
+        public MyLayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        public MyLayoutParams(int width, int height) {
+            super(width, height);
+        }
+
+        public MyLayoutParams(LayoutParams lp) {
+            super(lp);
+        }
     }
 
 

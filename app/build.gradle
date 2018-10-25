@@ -26,4 +26,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile 'com.blankj:utilcode:1.18.4'
+    compile "com.android.support:recyclerview-v7:${support_recyclerview_version}"
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 }

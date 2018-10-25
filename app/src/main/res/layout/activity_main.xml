@@ -8,8 +8,91 @@
     tools:context=".MainActivity">
 
     <com.example.administrator.myapplication.view.VirtualItemLayout
-        android:background="#ffb200"
         android:layout_width="match_parent"
-        app:topImage="@mipmap/shopbag"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#F2873B"
+        app:topImage="@mipmap/shopbag">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
+
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_margin="22dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/text_goodsname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/img_product"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="奥蓝际德酒店"
+                android:textColor="#555555"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/text_goodsdetials"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_goodsname"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/img_product"
+                android:ellipsize="end"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="颜色分类：白色；尺寸：S"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/text_goodsdprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_goodsdetials"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/img_product"
+                android:text="￥99"
+                android:textColor="#F70800"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_original_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/text_goodsdprice"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/text_goodsdprice"
+                android:textColor="#999"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_goodscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tv_original_price"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/tv_original_price"
+                android:text="x1"
+                android:textColor="#999"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:overScrollMode="never"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.example.administrator.myapplication.view.VirtualItemLayout>
 </android.support.constraint.ConstraintLayout>
